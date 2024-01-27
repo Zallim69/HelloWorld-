@@ -52,7 +52,7 @@ let age = prompt("Сколько Вам лет?");
 alert(age);
 
 // Задание 9.0
-const user = {
+let user = {
   name: "Zalim",
   age: 36,
   isAdmin: true,
@@ -61,15 +61,9 @@ const user = {
 console.log(user);
 
 // Задание 9.1
-user.cityOfResidence = "Baksan";
+user["city of residence"] = "Baksan";
 
 // Задание 9.2
-const user = {
-  name: "Zalim",
-  age: 36,
-  isAdmin: true,
-};
-
 user.age = 18;
 console.log(user);
 
