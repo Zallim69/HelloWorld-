@@ -6,21 +6,21 @@ a = 20;
 alert(a);
 
 // Задание 2
-var yearOfFirstiPhone = 2007;
+let yearOfFirstiPhone = 2007;
 alert(yearOfFirstiPhone);
 
 // Задание 3
-var creatorName = "Brendan Eich";
+let creatorName = "Brendan Eich";
 console.log(creatorName);
 
 // Задание 4
-var a = 10;
-var b = 2;
+let a = 10;
+let b = 2;
 
-var sum = a + b;
-var difference = a - b;
-var product = a * b;
-var quotient = a / b;
+let sum = a + b;
+let difference = a - b;
+let product = a * b;
+let quotient = a / b;
 
 alert("Сумма: " + sum);
 alert("Разность: " + difference);
@@ -28,13 +28,13 @@ alert("Произведение: " + product);
 alert("Частное: " + quotient);
 
 // Задание 5
-var result = 2 ** 5;
+let result = 2 ** 5;
 alert(result);
 
 // Задание 6
-var a = 9;
-var b = 2;
-var remainder = a % b;
+let a = 9;
+let b = 2;
+let remainder = a % b;
 alert(remainder);
 
 // Задание 7
