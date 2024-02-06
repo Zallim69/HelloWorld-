@@ -70,7 +70,9 @@ switch (monthNumber) {
 // Задание 7:
 let number = prompt('Пожалуйста, введите число');
 
-if (isNaN(number)) {
+if (number === null || number === '') {
+  console.log('Ввод отменен');
+} else if (isNaN(number)) {
   console.log('Вы ввели не число');
 } else {
   if (number % 2 === 0) {
@@ -94,21 +96,21 @@ if (clientOS === 0) {
 
 
 // Задание 9:
-let clientOS = 0;
-let clientDeviceYear = 2010;
+let deviceOS = 0;
+let deviceYear = 2010;
 
-if (clientDeviceYear >= 2015) {
-  if (clientOS === 0) {
+if (deviceYear >= 2015) {
+  if (deviceOS === 0) {
     console.log('Установите приложение для iOS по ссылке');
-  } else if (clientOS === 1) {
+  } else if (deviceOS === 1) {
     console.log('Установите приложение для Android по ссылке');
   } else {
     console.log('Неизвестная операционная система');
   }
 } else {
-  if (clientOS === 0) {
+  if (deviceOS === 0) {
     console.log('Установите облегченную версию приложения для iOS по ссылке');
-  } else if (clientOS === 1) {
+  } else if (deviceOS === 1) {
     console.log('Установите облегченную версию приложения для Android по ссылке');
   } else {
     console.log('Неизвестная операционная система');
