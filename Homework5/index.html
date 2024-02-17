@@ -1,7 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games</title>
@@ -9,21 +8,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="top center">
-      <section>
-       <h1 class="top__text" >Добро пожаловать на мой сайт !</h1>
-       <p class="top__paragraph" >Вам предстоит пройти несколько увлекательных игр. Если готов нажимай <span class="top__paragraph1">поехали</span> и <span class="top__paragraph1">приступай</span></p>
-       <div class="top__button">
-           <button class="top__but-header">Поехали!</button>
-       </div>
-       
-      </section>
-   </div>
-   <div class="product center">
+</head>
+<body>
+<div class="top center">
+    <section>
+        <h1 class="top__text">Добро пожаловать на мой сайт !</h1>
+        <p class="top__paragraph">Вам предстоит пройти несколько увлекательных игр. Если готов нажимай <span class="top__paragraph1">поехали</span> и <span class="top__paragraph1">приступай</span></p>
+        <div class="top__button">
+            <button class="top__but-header">Поехали!</button>
+        </div>
+
+    </section>
+</div>
+<div class="product center">
     <a class="product1" href="game.html">
-      <h2 class="product__text">Игра 1</h2>
+        <h2 class="product__text">Игра 1</h2>
     </a>
     <a class="product2">
         <h2 class="product__text">Игра 2</h2>
@@ -32,13 +31,44 @@
         <h2 class="product__text">Игра 3</h2>
     </a>
     <div class="top__block">
-    <div class="top__hug">
-    <h1 class="top__seasons">Времена года!</h1>
-    <p class="top__but">Нажмите кнопку играть, введите номер месяца (от 1 до 12) и вы узнаете к какому времени года он относится</p>
-  <button class="top__but-game">Играть!</button>
+        <div class="top__hug">
+            <h1 class="top__seasons">Времена года!</h1>
+            <p class="top__but">Нажмите кнопку играть, введите номер месяца (от 1 до 12) и Вы узнаете к какому времени года он относится</p>
+            <button class="top__but-game" onclick="playGame()">Играть!</button>
+        </div>
+        <div class="top__image"></div>
+    </div>
 </div>
-<div class="top__image"></div>
-</div>
-</div>
+
+<script>
+    function playGame() {
+      const findMin = (a, b) => {
+  if (a < b) {
+    return a;
+  } else {
+    return b;
+  }
+}
+
+console.log(findMin(8, 4));
+console.log(findMin(6, 6));
+
+/*первое задание с плавающими вводными*/
+const compareNumbers = () => {
+  let num1 = Number(prompt("Введите первое число"));
+  let num2 = Number(prompt("Введите второе число"));
+  if (num1 > num2) {
+    alert("Первое число больше");
+  } else if (num1 < num2) {
+    alert("Второе число больше");
+  } else {
+    alert("Числа равны");
+  }
+}
+
+compareNumbers();        alert('Игра началась!');
+    }
+</script>
+
 </body>
 </html>
