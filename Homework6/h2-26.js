@@ -2,10 +2,10 @@
 const arr = [1, 5, 4, 10, 0, 3];
 
 for (let i = 0; i < arr.length; i++) {
-    if (arr[i] 10) {
-        console.log(arr[i        break;
+    if (arr[i] < 10) {
+        console.log(arr[i]);
+        break;
     }
-    console.log[i]);
 }
 
 // Задание 2:
@@ -39,28 +39,34 @@ for (let i = 0; i < rows; i++) {
 console.log(multiArray);
 
 // Задание 5:
-let arr = [1, 1, 1];
-arr.push(2, 2, 2);
+let fifthArr = [1, 1, 1];
+fifthArr.push(2, 2, 2);
 
-console.log(arr); 
+console.log(fifthArr);
 
 // Задание 6:
-let arr = [9, 8, 7, 'a', 6, 5];
+let sixthArr = [9, 8, 7, 'a', 6, 5];
 
-arr.sort((a, b) => a - b);
+sixthArr.sort((a, b) => a - b);
 
-arr = arr.filter(item => typeof item === 'number');
+let numbersOnly = sixthArr.filter(item => typeof item === 'number');
 
-console.log(arr);
+console.log(numbersOnly);
 
 // Задание 7:
 let numbers = [9, 8, 7, 6, 5];
 let userGuess = prompt("Угадай число из массива [9, 8, 7, 6, 5]:");
 
-if (numbers.includes(parseInt(userGuess))) {
-    alert("Угадал");
+let userNumber = Number(userGuess);
+
+if (!isNaN(userNumber) && userNumber !== 0) {
+    if (numbers.includes(userNumber)) {
+        alert("Угадал");
+    } else {
+        alert("Не угадал");
+    }
 } else {
-    alert("Не угадал");
+    alert("Пожалуйста, введите корректное число из массива.");
 }
 
 // Задание 8:
