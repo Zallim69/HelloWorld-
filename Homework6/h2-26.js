@@ -2,7 +2,7 @@
 const arr = [1, 5, 4, 10, 0, 3];
 
 for (let i = 0; i < arr.length; i++) {
-    if (arr[i] < 10) {
+    if (arr[i] = 10) {
         console.log(arr[i]);
         break;
     }
@@ -57,13 +57,17 @@ console.log(numbersOnly);
 let numbers = [9, 8, 7, 6, 5];
 let userGuess = prompt("Угадай число из массива [9, 8, 7, 6, 5]:");
 
-let userNumber = Number(userGuess);
+if (userGuess !== null && userGuess !== "") {
+    let userNumber = Number(userGuess);
 
-if (!isNaN(userNumber) && userNumber !== 0) {
-    if (numbers.includes(userNumber)) {
-        alert("Угадал");
+    if (!isNaN(userNumber)) {
+        if (numbers.includes(userNumber)) {
+            alert("Угадал");
+        } else {
+            alert("Не угадал");
+        }
     } else {
-        alert("Не угадал");
+        alert("Пожалуйста, введите корректное число из массива.");
     }
 } else {
     alert("Пожалуйста, введите корректное число из массива.");
