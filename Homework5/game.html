@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Поиск минимального числа</title>
+  </head>
+  <body>
+<script>
+const findMin = (a, b) => {
+  if (a < b) {
+    return a;
+  } else {
+    return b;
+  }
+}
+
+console.log(findMin(8, 4));
+console.log(findMin(6, 6));
+
+/*первое задание с плавающими вводными*/
+const compareNumbers = () => {
+  let num1 = Number(prompt("Введите первое число"));
+  let num2 = Number(prompt("Введите второе число"));
+  if (num1 > num2) {
+    alert("Первое число больше");
+  } else if (num1 < num2) {
+    alert("Второе число больше");
+  } else {
+    alert("Числа равны");
+  }
+}
+
+compareNumbers();
+    </script>
+  </body>
+</html>
