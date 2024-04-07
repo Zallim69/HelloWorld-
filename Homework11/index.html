@@ -148,38 +148,46 @@
       const textInput = document.querySelector(".add-form-text");
 
       // Добавляем обработчик события для кнопки добавления комментария
-addButton.addEventListener("click", function () {
-  const name = sanitizeInput(nameInput.value.trim());
-  const text = sanitizeInput(textInput.value.trim());
+      addButton.addEventListener("click", function () {
+        const name = sanitizeInput(nameInput.value.trim());
+        const text = sanitizeInput(textInput.value.trim());
 
-          // Проверяем, что оба поля заполнены перед добавлением комментария
-  if (name !== "" && text !== "") {
-    commentsData.push({
-      name: name,
-      date: new Date().toLocaleString(),
-      text: text,
-      likes: 0,
-      liked: false,
-    });
-    renderComments();
-    nameInput.value = "";
-    textInput.value = "";
-  } else {
-    alert("Пожалуйста, заполните оба поля");
-  }
-});
+        // Проверяем, что оба поля заполнены перед добавлением комментария
+        if (name !== "" && text !== "") {
+          commentsData.push({
+            name: name,
+            date: new Date().toLocaleString(),
+            text: text,
+            likes: 0,
+            liked: false,
+          });
+          renderComments();
+          nameInput.value = "";
+          textInput.value = "";
+        } else {
+          alert("Пожалуйста, заполните оба поля");
+        }
+      });
 
       // Функция для защиты от внедрения HTML кода
-function sanitizeHTML(str) {
-  const div = document.createElement("div");
-  div.innerText = str;
-  return div.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\//g, "&#47;");
+      function sanitizeHTML(str) {
+        const div = document.createElement("div");
+        div.innerText = str;
+        return div.innerHTML
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/\//g, "&#47;");
+      }
+
+      function sanitizeInput(input) {
+    // Обработка открывающих и закрывающих тегов
+    let sanitizedInput = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    // Дополнительная логика фильтрации и защиты от XSS
+
+    return sanitizedInput;
 }
 
-// Обновленная функция для защиты от внедрения HTML кода
-function sanitizeInput(input) {
-  return sanitizeHTML(input);
-}
 
       // Инициализация отображения комментариев при загрузке страницы
       renderComments();
