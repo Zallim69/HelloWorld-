@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Проект "Комменты"</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <ul class="comments">
+        <li class="comment">
+          <div class="comment-header">
+            <div>Глеб Фокин</div>
+            <div>12.02.22 12:18</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              Это будет первый комментарий на этой странице
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">3</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+        </li>
+        <li class="comment">
+          <div class="comment-header">
+            <div>Варвара Н.</div>
+            <div>13.02.22 19:22</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              Мне нравится как оформлена эта страница! ❤
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">75</span>
+              <button class="like-button -active-like"></button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="add-form">
+        <input
+          type="text"
+          class="add-form-name"
+          placeholder="Введите Ваше имя"
+        />
+        <textarea
+          type="textarea"
+          class="add-form-text"
+          placeholder="Введите Ваш комментарий"
+          rows="4"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button">Написать</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    "use strict";
+
+// Получаем комментарии из localStorage или устанавливаем начальные значения
+let commentsData = JSON.parse(localStorage.getItem("comments")) || [
+  {
+    name: "Глеб Фокин",
+    date: "12.02.22 12:18",
+    text: "Это будет первый комментарий на этой странице",
+    likes: 3,
+    liked: false,
+  },
+  {
+    name: "Варвара Н.",
+    date: "13.02.22 19:22",
+    text: "Мне нравится как оформлена эта страница! ❤",
+    likes: 75,
+    liked: true,
+  },
+];
+
+// Функция для отображения комментариев на странице
+function renderComments() {
+  const commentsList = document.querySelector(".comments");
+  commentsList.innerHTML = "";
+
+  commentsData.forEach((comment, index) => {
+    // Создаем новый элемент комментария
+    const newComment = document.createElement("li");
+    newComment.classList.add("comment");
+
+    // Заполняем HTML для комментария
+    newComment.innerHTML = `
+      <div class="comment-header">
+        <div>${comment.name}</div>
+        <div>${comment.date}</div>
+      </div>
+      <div class="comment-body">
+        <div class="comment-text" onclick="showComment('${sanitizeHTML(
+          comment.text
+        )}')">
+           ${sanitizeHTML(comment.text)}
+        </div>
+      </div>
+      <div class="comment-footer">
+        <div class="likes">
+          <span class="likes-counter">${comment.likes}</span>
+          <button class="like-button ${
+            comment.liked ? "-active-like" : ""
+          }"></button>
+        </div>
+      </div>
+    `;
+
+    // Добавляем комментарий на страницу
+    commentsList.appendChild(newComment);
+
+    // Обработчик для кнопки лайка
+    const likeButton = newComment.querySelector(".like-button");
+    likeButton.addEventListener("click", function () {
+      if (comment.liked) {
+        comment.likes--;
+      } else {
+        comment.likes++;
+      }
+      comment.liked = !comment.liked;
+      renderComments();
+    });
+  });
+}
+
+// Функция для отображения комментария в поле ввода
+function showComment(commentText) {
+  const textInput = document.querySelector(".add-form-text");
+  const formattedText = commentText.trim().startsWith(">")
+    ? commentText.trim()
+    : "> " + commentText.trim();
+  textInput.value = formattedText;
+}
+
+// Получаем элементы формы и добавляем обработчик события для добавления комментария
+const addButton = document.querySelector(".add-form-button");
+const nameInput = document.querySelector(".add-form-name");
+const textInput = document.querySelector(".add-form-text");
+
+addButton.addEventListener("click", function () {
+  const name = sanitizeInput(nameInput.value.trim());
+  const text = sanitizeInput(textInput.value.trim());
+
+  // Проверяем заполнены ли оба поля перед добавлением комментария
+  if (name !== "" && text !== "") {
+    // Добавляем новый комментарий в массив и обновляем отображение
+    commentsData.push({
+      name: name,
+      date: new Date().toLocaleString(),
+      text: text,
+      likes: 0,
+      liked: false,
+    });
+    localStorage.setItem("comments", JSON.stringify(commentsData));
+    renderComments();
+    nameInput.value = "";
+    textInput.value = "";
+  } else {
+    alert("Please fill in both fields");
+  }
+});
+
+// Функция для очистки опасных символов в HTML
+function sanitizeHTML(str) {
+  const div = document.createElement("div");
+  div.innerText = str;
+  return div.innerHTML
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\//g, "&#47;");
+}
+
+// Функция для очистки опасных символов во вводе
+function sanitizeInput(input) {
+  let sanitizedInput = input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return sanitizedInput;
+}
+
+// Инициализация отображения комментариев
+renderComments();
+
+// Получаем комментарии с сервера и обрабатываем их
+fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    // Обработка полученных данных и добавление их в commentsData
+  })
+  .catch((error) => console.error("Error fetching comments:", error));
+    </script>
+  </body>
+</html>
