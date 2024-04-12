@@ -165,10 +165,33 @@ addButton.addEventListener("click", function () {
     renderComments();
     nameInput.value = "";
     textInput.value = "";
+    
+    // Отправляем новый комментарий на сервер
+    fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments", {
+  method: "POST",
+  body: JSON.stringify({
+    name: name,
+    text: text,
+  }),
+})
+.then((response) => response.json())
+.then((data) => {
+  console.log("Comment sent successfully:", data);
+})
+.catch((error) => console.error("Error sending comment:", error));
   } else {
     alert("Please fill in both fields");
   }
 });
+
+// Получаем комментарии с сервера и обрабатываем их
+fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    // Обработка полученных данных и добавление их в commentsData
+  })
+  .catch((error) => console.error("Error fetching comments:", error));
 
 // Функция для очистки опасных символов в HTML
 function sanitizeHTML(str) {
@@ -188,15 +211,6 @@ function sanitizeInput(input) {
 
 // Инициализация отображения комментариев
 renderComments();
-
-// Получаем комментарии с сервера и обрабатываем их
-fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments")
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    // Обработка полученных данных и добавление их в commentsData
-  })
-  .catch((error) => console.error("Error fetching comments:", error));
     </script>
   </body>
 </html>
