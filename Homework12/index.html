@@ -9,40 +9,6 @@
   <body>
     <div class="container">
       <ul class="comments">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
       </ul>
       <div class="add-form">
         <input
@@ -65,23 +31,8 @@
     <script>
     "use strict";
 
-// Получаем комментарии из localStorage или устанавливаем начальные значения
-let commentsData = JSON.parse(localStorage.getItem("comments")) || [
-  {
-    name: "Глеб Фокин",
-    date: "12.02.22 12:18",
-    text: "Это будет первый комментарий на этой странице",
-    likes: 3,
-    liked: false,
-  },
-  {
-    name: "Варвара Н.",
-    date: "13.02.22 19:22",
-    text: "Мне нравится как оформлена эта страница! ❤",
-    likes: 75,
-    liked: true,
-  },
-];
+// Устанавливаем пустой массив
+let commentsData = [];
 
 // Функция для отображения комментариев на странице
 function renderComments() {
@@ -153,21 +104,10 @@ addButton.addEventListener("click", function () {
 
   // Проверяем заполнены ли оба поля перед добавлением комментария
   if (name !== "" && text !== "") {
-    // Добавляем новый комментарий в массив и обновляем отображение
-    commentsData.push({
-      name: name,
-      date: new Date().toLocaleString(),
-      text: text,
-      likes: 0,
-      liked: false,
-    });
-    localStorage.setItem("comments", JSON.stringify(commentsData));
-    renderComments();
-    nameInput.value = "";
-    textInput.value = "";
+   
     
     // Отправляем новый комментарий на сервер
-    fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments", {
+    fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
   method: "POST",
   body: JSON.stringify({
     name: name,
@@ -176,7 +116,7 @@ addButton.addEventListener("click", function () {
 })
 .then((response) => response.json())
 .then((data) => {
-  console.log("Comment sent successfully:", data);
+  getComments ()
 })
 .catch((error) => console.error("Error sending comment:", error));
   } else {
@@ -185,14 +125,33 @@ addButton.addEventListener("click", function () {
 });
 
 // Получаем комментарии с сервера и обрабатываем их
-fetch("https://wedev-api.sky.pro/api/v1/Zalim/comments")
+
+
+function getComments () {
+  return fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
+  method: "GET"
+})
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
-    // Обработка полученных данных и добавление их в commentsData
+
+    // Преобразуем полученные данные в нужный формат и добавляем их в commentsData
+    commentsData = data.comments.map(comment => {
+      return {
+        name: comment.author.name,
+        date: new Date(comment.date).toLocaleString(),
+        text: comment.text,
+        likes: comment.likes,
+        liked: false
+      };
+    });
+
+    console.log(commentsData); // Выводим полученные данные в консоль
+    renderComments(); // Вызываем функцию отображения комментариев
   })
   .catch((error) => console.error("Error fetching comments:", error));
 
+}
 // Функция для очистки опасных символов в HTML
 function sanitizeHTML(str) {
   const div = document.createElement("div");
@@ -210,7 +169,7 @@ function sanitizeInput(input) {
 }
 
 // Инициализация отображения комментариев
-renderComments();
+getComments ()
     </script>
   </body>
 </html>
