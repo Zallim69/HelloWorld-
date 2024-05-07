@@ -29,7 +29,7 @@
     </div>
 
     <script>
- "use strict";
+"use strict";
 
 let commentsData = [];
 
@@ -93,47 +93,42 @@ addButton.addEventListener("click", function () {
   const name = sanitizeInput(nameInput.value.trim());
   const text = sanitizeInput(textInput.value.trim());
 
-  if (name.length < 3 || text.length < 3) {
-    alert("Имя и комментарий не должны быть короче 3-х символов");
-    return;
-  }
-
   if (navigator.onLine) {
     addForm.replaceWith(loadingMessage);
 
-    fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
-      method: "POST",
-      body: JSON.stringify({
-        name: name,
-        text: text,
-        forceError: true,
-      }),
-    })
-      .then((response) => {
-        if (response.status === 500) {
-          throw new Error("Server error");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        getComments();
-        const savedName = nameInput.value;
-        const savedText = textInput.value;
-        nameInput.value = savedName;
-        textInput.value = savedText;
-        loadingMessage.replaceWith(addForm);
-      })
-      .catch((error) => {
-        console.error("Error sending comment:", error);
-        if (error.message === "Server error") {
-          alert("Сервер сломался, попробуйте позже");
-          const savedName = nameInput.value;
-          const savedText = textInput.value;
-          nameInput.value = savedName;
-          textInput.value = savedText;
-          loadingMessage.replaceWith(addForm);
-        }
-      });
+  fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
+  method: "POST",
+  body: JSON.stringify({
+    name: name,
+    text: text,
+    forceError: true,
+  }),
+})
+  .then((response) => {
+    if (response.status === 400) {
+      throw new Error("Bad request");
+    }
+    if (response.status === 500) {
+      throw new Error("Server error");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    getComments();
+    nameInput.value = "";
+    textInput.value = "";
+    loadingMessage.replaceWith(addForm);
+  })
+  .catch((error) => {
+    console.error("Error sending comment:", error);
+    if (error.message === "Bad request") {
+      alert("Имя и комментарий должны быть не короче 3-х символов");
+      loadingMessage.replaceWith(addForm);
+    } else if (error.message === "Server error") {
+      alert("Сервер сломался, попробуйте позже");
+      loadingMessage.replaceWith(addForm);
+    }
+  });
   } else {
     alert("У пользователя пропал интернет");
   }
@@ -146,13 +141,21 @@ document.body.appendChild(loader);
 
 getComments()
   .then(() => document.body.removeChild(loader))
-  .catch((error) => console.error("Error fetching comments:", error));
-
-function getComments() {
-  return fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
+  .catch((error) => {
+    console.error("Error fetching comments:", error);
+    alert("Не удалось загрузить комментарии. Пожалуйста, попробуйте позже.");
+    document.body.removeChild(loader);
+  });
+  function getComments() {
+    return fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
     method: "GET"
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments");
+      }
+      return response.json();
+    })
     .then((data) => {
       commentsData = data.comments.map(comment => {
         return {
@@ -164,8 +167,13 @@ function getComments() {
         };
       });
       renderComments();
+    })
+    .catch((error) => {
+      console.error("Error fetching comments:", error);
+      alert("Не удалось получить комментарии. Пожалуйста, проверьте подключение к интернету и попробуйте снова.");
     });
 }
+  
 
 function sanitizeHTML(str) {
   return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
