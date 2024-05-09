@@ -93,8 +93,14 @@ addButton.addEventListener("click", function () {
   const name = sanitizeInput(nameInput.value.trim());
   const text = sanitizeInput(textInput.value.trim());
 
+  if (!name.trim() || !text.trim()) 
+  alert("Имя и комментарий не могут быть пустыми");
+  return;
+
   if (navigator.onLine) {
     addForm.replaceWith(loadingMessage);
+
+   
 
   fetch("https://wedev-api.sky.pro/api/v1/zalim-zalim/comments", {
   method: "POST",
@@ -182,8 +188,6 @@ function sanitizeHTML(str) {
 function sanitizeInput(input) {
   return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-
-getComments();
     </script>
   </body>
 </html>
