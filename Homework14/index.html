@@ -93,9 +93,10 @@ addButton.addEventListener("click", function () {
   const name = sanitizeInput(nameInput.value.trim());
   const text = sanitizeInput(textInput.value.trim());
 
-  if (!name.trim() || !text.trim()) 
-  alert("Имя и комментарий не могут быть пустыми");
-  return;
+  if (!name || !text) {
+    alert("Имя и комментарий не могут быть пустыми");
+    return;
+  }
 
   if (navigator.onLine) {
     addForm.replaceWith(loadingMessage);
