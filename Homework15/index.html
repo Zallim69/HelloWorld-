@@ -66,97 +66,117 @@
    "use strict";
 
 const commentsData = [
-  { name: "Глеб Фокин", date: "12.02.22 12:18", text: "Это будет первый комментарий на этой странице", likes: 3, liked: false },
-  { name: "Варвара Н.", date: "13.02.22 19:22", text: "Мне нравится как оформлена эта страница! ❤", likes: 75, liked: true }
+  {
+    name: "Глеб Фокин",
+    date: "12.02.22 12:18",
+    text: "Это будет первый комментарий на этой странице",
+    likes: 3,
+    liked: false,
+  },
+  {
+    name: "Варвара Н.",
+    date: "13.02.22 19:22",
+    text: "Мне нравится как оформлена эта страница! ❤",
+    likes: 75,
+    liked: true,
+  },
 ];
 
-function formatDate(date) {
-  const pad = n => n.toString().padStart(2, '0');
-  return [
-    pad(date.getDate()),
-    pad(date.getMonth() + 1),
-    pad(date.getFullYear().toString().slice(-2)),
-  ].join('.') + ' ' + [
-    pad(date.getHours()),
-    pad(date.getMinutes())
-  ].join(':');
-}
-
-function createCommentElement(comment) {
-  const commentEl = document.createElement('li');
-  commentEl.className = 'comment';
-
-  const header = document.createElement('div');
-  header.className = 'comment-header';
-  [comment.name, comment.date].forEach(text => {
-    const div = document.createElement('div');
-    div.textContent = text;
-    header.appendChild(div);
-  });
-
-  const body = document.createElement('div');
-  body.className = 'comment-body';
-  const textDiv = document.createElement('div');
-  textDiv.className = 'comment-text';
-  textDiv.textContent = comment.text;
-  body.appendChild(textDiv);
-
-  const footer = document.createElement('div');
-  footer.className = 'comment-footer';
-  const likesDiv = document.createElement('div');
-  likesDiv.className = 'likes';
-  
-  const counter = document.createElement('span');
-  counter.className = 'likes-counter';
-  counter.textContent = comment.likes;
-
-  const likeBtn = document.createElement('button');
-  likeBtn.className = `like-button${comment.liked ? ' -active-like' : ''}`;
-  likeBtn.addEventListener('click', () => {
-    comment.liked = !comment.liked;
-    comment.likes += comment.liked ? 1 : -1;
-    renderComments();
-  });
-
-  likesDiv.append(counter, likeBtn);
-  footer.appendChild(likesDiv);
-  
-  commentEl.append(header, body, footer);
-  return commentEl;
-}
-
 function renderComments() {
-  commentsList.innerHTML = '';
-  commentsData.forEach(comment => {
-    commentsList.appendChild(createCommentElement(comment));
+  const commentsList = document.querySelector(".comments");
+  commentsList.innerHTML = "";
+
+  commentsData.forEach((comment) => {
+    const newComment = document.createElement("li");
+    newComment.classList.add("comment");
+
+    // Экранируем все данные перед вставкой в HTML
+    newComment.innerHTML = `
+      <div class="comment-header">
+        <div>${sanitizeHTML(comment.name)}</div>
+        <div>${sanitizeHTML(comment.date)}</div>
+      </div>
+      <div class="comment-body">
+        <div class="comment-text"></div>
+      </div>
+      <div class="comment-footer">
+        <div class="likes">
+          <span class="likes-counter">${comment.likes}</span>
+          <button class="like-button ${
+            comment.liked ? "-active-like" : ""
+          }"></button>
+        </div>
+      </div>
+    `;
+
+    // Обработка текста комментария
+    const commentText = newComment.querySelector(".comment-text");
+    commentText.innerHTML = sanitizeHTML(comment.text);
+    
+    // Обработчик для ответа на комментарий
+    commentText.addEventListener("click", () => {
+      showComment(comment.text);
+    });
+
+    // Обработчик лайка с остановкой всплытия
+    const likeButton = newComment.querySelector(".like-button");
+    likeButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      comment.liked = !comment.liked;
+      comment.likes += comment.liked ? 1 : -1;
+      renderComments();
+    });
+
+    commentsList.appendChild(newComment);
   });
 }
 
+function showComment(commentText) {
+  const textInput = document.querySelector(".add-form-text");
+  const formattedText = commentText.trim().startsWith(">")
+    ? commentText.trim()
+    : `> ${commentText.trim()}`;
+  textInput.value = formattedText;
+}
+
+// Функция экранирования HTML
+function sanitizeHTML(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/\//g, "&#x2F;");
+}
+
+// Инициализация формы
 const addButton = document.querySelector(".add-form-button");
-const commentsList = document.querySelector(".comments");
 const nameInput = document.querySelector(".add-form-name");
 const textInput = document.querySelector(".add-form-text");
 
 addButton.addEventListener("click", () => {
+  // Получаем и очищаем данные без экранирования
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
   if (name && text) {
     commentsData.push({
       name: name,
-      date: formatDate(new Date()),
+      date: new Date().toLocaleString(),
       text: text,
       likes: 0,
-      liked: false
+      liked: false,
     });
     renderComments();
-    nameInput.value = '';
-    textInput.value = '';
+    nameInput.value = "";
+    textInput.value = "";
   } else {
-    alert('Пожалуйста, заполните оба поля');
+    alert("Заполните оба поля!");
   }
 });
 
+// Первоначальная отрисовка
 renderComments();
     </script>
   </body>
