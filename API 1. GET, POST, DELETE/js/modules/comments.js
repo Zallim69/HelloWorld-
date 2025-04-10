@@ -2,7 +2,7 @@ import { getComments, postComment } from './api.js';
 import { renderComments } from './render.js';
 import { initHandlers } from './handlers.js';
 
-let commentsData = [];
+export let commentsData = []; // Экспортируем массив, чтобы handlers.js мог его обновлять
 
 export const initApp = () => {
   const loader = document.createElement("div");
@@ -13,7 +13,7 @@ export const initApp = () => {
   loadComments()
     .then(() => {
       document.body.removeChild(loader);
-      initHandlers(commentsData, renderComments, loadComments);
+      initHandlers(renderComments, loadComments); // Убрали передачу commentsData
     })
     .catch((error) => {
       console.error("Error initializing app:", error);

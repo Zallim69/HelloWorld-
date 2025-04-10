@@ -1,7 +1,7 @@
 import { sanitizeInput } from './sanitize.js';
-import { addComment } from './comments.js';
+import { addComment, commentsData } from './comments.js'; // Импортируем commentsData
 
-export const initHandlers = (commentsData, renderComments, loadComments) => {
+export const initHandlers = (renderComments, loadComments) => {
   const addButton = document.querySelector(".add-form-button");
   const nameInput = document.querySelector(".add-form-name");
   const textInput = document.querySelector(".add-form-text");
@@ -40,16 +40,16 @@ export const initHandlers = (commentsData, renderComments, loadComments) => {
       });
   });
 
-  // Обработчик лайков
+  // Обработчик лайков (теперь работает с актуальными данными)
   commentsList.addEventListener("click", (event) => {
     if (event.target.classList.contains("like-button")) {
       const commentElement = event.target.closest(".comment");
       const commentIndex = Array.from(commentsList.children).indexOf(commentElement);
-      const comment = commentsData[commentIndex];
+      const comment = commentsData[commentIndex]; // Используем импортированный массив
 
       comment.liked = !comment.liked;
       comment.likes += comment.liked ? 1 : -1;
-      renderComments(commentsData);
+      renderComments(commentsData); // Передаем актуальные данные
     }
 
     if (event.target.classList.contains("comment-text")) {
